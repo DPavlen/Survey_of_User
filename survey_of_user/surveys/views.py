@@ -10,14 +10,20 @@ from . models import Survey, Question, Answer
 COUNT_POST = 10
 
 
-def index(request):
-    """Главная страница списка опросов пользователей."""
-    surveys = Survey.objects.all()
-    paginator = Paginator(surveys, COUNT_POST)
+def get_paginated_objects(objects, request):
+    """Возвращает объекты с пагинацией."""
+    paginator = Paginator(objects, COUNT_POST)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    return page_obj
+
+
+def survey_list(request):
+    """Главная страница списка опросов пользователей."""
+    # surveys = Survey.objects.all()
+    surveys = Survey.objects.raw('SELECT * FROM surveys_survey')
+    page_obj = get_paginated_objects(surveys, request)
     context = {
         'page_obj': page_obj,
     }
-    print(surveys)
-    return render(request, "surveys/index.html", context )
+    return render(request, "surveys/index.html", context)
