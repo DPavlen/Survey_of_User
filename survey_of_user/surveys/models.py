@@ -4,6 +4,7 @@ from django.db import models
 class Survey(models.Model):
     """Модель опросов.
     У каждого опроса есть вопрос и ответ на него."""
+    objects = None
     title = models.CharField(
         "Опрос",
         unique=True,
